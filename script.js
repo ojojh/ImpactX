@@ -1040,5 +1040,25 @@ document.addEventListener('DOMContentLoaded', () => {
     closeModal();
     e.target.reset();
     showToast('New workspace item created!');
+    async function askGemini(userPrompt) {
+  try {
+    const response = await fetch('/.netlify/functions/gemini', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ prompt: userPrompt }),
+    });
+
+    const data = await response.json();
+    
+    if (!response.ok) throw new Error(data.error);
+
+    console.log("Gemini says:", data.text);
+    return data.text;
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
   });
 });
